@@ -10,7 +10,9 @@ import RPi.GPIO as GPIO
 
 from datetime import datetime
 from pygame.locals import *
+import fitbit as fitbit
 from weightprocessor import WeightProcessor, WeightRecord, WeightProcessorConfiguration
+
 
 
 
@@ -21,13 +23,15 @@ HOME = "/home/pi"
 # initial user's list with their weights and fitbit user keys.
 # this map we are using only if we don't have weight history, otherwise last morning
 # values will be used to define user
-USERS = {"Alex": {'weight': 77, 'fitbit_user': "userId", 'fitbit_key': "userKey"},
+USERS = {"Alex": {'weight': 77,
+                  'fitbit_user': os.environ.get('FITBIT_ALEX_ID'),
+                  'fitbit_secret': os.environ.get('FITBIT_ALEX_SECRET')},
          "Olya": {'weight': 57},
          "Platon": {'weight': 16}}
 
 # Fitbit client information
-FITBIT_CLIENT_ID = None
-FITBIT_CLIENT_SECRET = None
+FITBIT_CLIENT_ID = os.environ.get('FITBIT_CLIENT_ID')
+FITBIT_CLIENT_SECRET = os.environ.get('FITBIT_CLIENT_SECRET')
 
 # initial possible diff in weights for users to define them based on USERS map
 # for example if you have here 2 and 77 for alex in the map, we will consider that
@@ -123,17 +127,34 @@ class UserProvider:
     def weight(self, name):
         return USERS[name]['weight']
 
+    def fitbit_user_id(self, name):
+        return USERS[name]['fitbit_user']
+
+    def fitbit_user_secret(self, name):
+        return USERS[name]['fitbit_secret']
+
     def update_weight(self, name, weight):
         USERS[name]['weight'] = weight
 
 
 class FitbitConnector:
-    def __init__(self, client_id, client_key):
+    def __init__(self, client_id, client_key, user_provider):
         self.client_id = client_id
         self.client_key = client_key
+        self.user_provider = user_provider
 
     def log_weight(self, user, weight):
-        logging.debug("Fitbit - saving {} for {}".format(weight, user))
+        fitbit_user_id = self.user_provider.fitbit_user_id(user)
+        fitbit_user_secret = self.user_provider.fitbit_user_secret(user)
+
+        if fitbit_user_id is None or fitbit_user_secret is None:
+            logging.warning("{} doesn't have fitbit keys. Weight will not be saved in fitbit cloud")
+        else:
+            logging.debug("Fitbit - saving {} for {}".format(weight, user))
+            authd_client = fitbit.Fitbit(self.client_id, self.client_key, resource_owner_key=fitbit_user_id,
+                                         resource_owner_secret=fitbit_user_secret)
+            fitbit_data = {'weight': weight, 'date': datetime.date.today().strftime("%Y-%m-%d")}
+            authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
 
 
 class EventProcessor:
@@ -161,7 +182,7 @@ class EventProcessor:
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
-                self.board.setLight(True)
+                self.board.set_light(True)
                 logging.debug("Starting measurement.")
                 self.measured = True
         elif self.measured:
@@ -446,7 +467,11 @@ def main():
                                       'month': datetime.today().month,
                                       'day': datetime.today().day,
                                       'w': weight})
+
         weight_processor.process(weight_record)
+
+        time.sleep(2)
+
         board.set_light(False)
 
         display.fill(BLACK)
