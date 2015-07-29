@@ -44,7 +44,7 @@ MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS = 5
 MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS = 2
 
 # time limits for morning values (24 hours period). None if check should not be performed
-MORNING_HOURS = None
+MORNING_HOURS = (5, 11)
 
 # path for database file
 DB_PATH = HOME + "/weight_db"
