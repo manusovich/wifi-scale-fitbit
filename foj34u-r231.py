@@ -151,7 +151,8 @@ class FitbitConnector:
             logging.debug("Fitbit - saving {} for {}".format(weight, user))
             authd_client = fitbit.Fitbit(self.client_id, self.client_key, resource_owner_key=fitbit_user_id,
                                          resource_owner_secret=fitbit_user_secret)
-            fitbit_data = {'weight': weight, 'date': datetime.today().strftime("%Y-%m-%d")}
+            # making conversion to pounds
+            fitbit_data = {'weight': weight * 2.2046, 'date': datetime.today().strftime("%Y-%m-%d")}
             authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
 
 
