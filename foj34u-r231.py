@@ -44,7 +44,7 @@ MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS = 5
 MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS = 2
 
 # time limits for morning values (24 hours period). None if check should not be performed
-MORNING_HOURS = (5, 12)
+MORNING_HOURS = None
 
 # path for database file
 DB_PATH = HOME + "/weight_db"
@@ -126,11 +126,9 @@ class UserProvider:
         return USERS[name]['weight']
 
     def fitbit_user_id(self, name):
-        logging.debug("ID: {}".format(USERS[name]['fitbit_user']))
         return USERS[name]['fitbit_user']
 
     def fitbit_user_secret(self, name):
-        logging.debug("Secret: {}".format(USERS[name]['fitbit_secret']))
         return USERS[name]['fitbit_secret']
 
     def update_weight(self, name, weight):
@@ -147,15 +145,13 @@ class FitbitConnector:
         fitbit_user_id = self.user_provider.fitbit_user_id(user)
         fitbit_user_secret = self.user_provider.fitbit_user_secret(user)
 
-        logging.debug("Keys: {} {}".format(fitbit_user_id, fitbit_user_secret))
-
         if fitbit_user_id is None or fitbit_user_secret is None:
             logging.warning("{} doesn't have fitbit keys. Weight will not be saved in fitbit cloud".format(user))
         else:
             logging.debug("Fitbit - saving {} for {}".format(weight, user))
             authd_client = fitbit.Fitbit(self.client_id, self.client_key, resource_owner_key=fitbit_user_id,
                                          resource_owner_secret=fitbit_user_secret)
-            fitbit_data = {'weight': weight, 'date': datetime.date.today().strftime("%Y-%m-%d")}
+            fitbit_data = {'weight': weight, 'date': datetime.today().strftime("%Y-%m-%d")}
             authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
 
 
