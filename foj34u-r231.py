@@ -452,9 +452,10 @@ def main():
                                                  USERS_MAX_W_DIFF,
                                                  MORNING_HOURS)
 
+    user_provider = UserProvider(USERS)
     weight_processor = WeightProcessor(configuration,
-                                       UserProvider(USERS),
-                                       FitbitConnector(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET))
+                                       user_provider,
+                                       FitbitConnector(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, user_provider))
 
     while 1 == 1:
         events_processor.reset()
