@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 import time
 import time as time_
@@ -405,9 +407,9 @@ class Wiiboard:
 def main():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(24, GPIO.OUT)
-    GPIO.output(24, GPIO.LOW)
-    time.sleep(1)
+    GPIO.setup(4, GPIO.OUT)
+    GPIO.output(4, GPIO.LOW)
+    time.sleep(3)
     GPIO.cleanup()
 
     events_processor = EventProcessor()
