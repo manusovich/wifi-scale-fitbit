@@ -14,8 +14,6 @@ import fitbit as fitbit
 from weightprocessor import WeightProcessor, WeightRecord, WeightProcessorConfiguration
 
 
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 HOME = "/home/pi"
@@ -128,9 +126,11 @@ class UserProvider:
         return USERS[name]['weight']
 
     def fitbit_user_id(self, name):
+        logging.debug("ID: {}".format(USERS[name]['fitbit_user']))
         return USERS[name]['fitbit_user']
 
     def fitbit_user_secret(self, name):
+        logging.debug("Secret: {}".format(USERS[name]['fitbit_secret']))
         return USERS[name]['fitbit_secret']
 
     def update_weight(self, name, weight):
@@ -147,8 +147,10 @@ class FitbitConnector:
         fitbit_user_id = self.user_provider.fitbit_user_id(user)
         fitbit_user_secret = self.user_provider.fitbit_user_secret(user)
 
+        logging.debug("Keys: {} {}".format(fitbit_user_id, fitbit_user_secret))
+
         if fitbit_user_id is None or fitbit_user_secret is None:
-            logging.warning("{} doesn't have fitbit keys. Weight will not be saved in fitbit cloud")
+            logging.warning("{} doesn't have fitbit keys. Weight will not be saved in fitbit cloud".format(user))
         else:
             logging.debug("Fitbit - saving {} for {}".format(weight, user))
             authd_client = fitbit.Fitbit(self.client_id, self.client_key, resource_owner_key=fitbit_user_id,
