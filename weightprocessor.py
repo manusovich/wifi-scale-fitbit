@@ -116,8 +116,8 @@ class WeightProcessor:
             morning_flow = False
 
         hour = datetime.today().hour
-        if self.configuration.morning_hours() is not None and not (
-                        self.configuration.morning_hours()[0] >= hour >= self.configuration.morning_hours()[1]):
+        if self.configuration.morning_hours() is None or not (
+                        self.configuration.morning_hours()[0] <= hour <= self.configuration.morning_hours()[1]):
             logging.debug("Morning flow will not be executed because of hours limit")
             morning_flow = False
 

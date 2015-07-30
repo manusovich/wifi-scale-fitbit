@@ -126,10 +126,16 @@ class UserProvider:
         return USERS[name]['weight']
 
     def fitbit_user_id(self, name):
-        return USERS[name]['fitbit_user']
+        try:
+              return USERS[name]['fitbit_user']
+        except:
+              return None
 
     def fitbit_user_secret(self, name):
-        return USERS[name]['fitbit_secret']
+        try:
+              return USERS[name]['fitbit_secret']
+        except:
+              return None
 
     def update_weight(self, name, weight):
         USERS[name]['weight'] = weight
