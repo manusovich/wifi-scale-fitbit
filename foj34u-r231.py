@@ -523,7 +523,7 @@ def main():
 
         weight_processor.process(weight_record)
 
-        time.sleep(2)
+        time.sleep(5)
 
         board.set_light(False)
 
