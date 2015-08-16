@@ -128,14 +128,19 @@ class Display:
                 if r.w >= mx:
                     mx = r.w
 
+            mx += 1
+            mn -= 1
+
             self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 145))
             self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 220))
 
             x = 40
             x0 = None
             y0 = None
+            w = 0
             pygame.draw.line(self.display, GRAY, (x, 145), (x, 240))
             for r in all_mornings:
+                w = r.w
                 x += 280 / count
                 y = 145 + (240 - 145) / (mx - mn) * (r.w - mn)
                 if y0 is not None:
@@ -144,6 +149,7 @@ class Display:
                 x0 = x
                 y0 = y
 
+            self.display.blit(self.font_graph.render(str(w), 1, GREEN), (10, y0 - 8))
             pygame.display.update()
 
     def clear(self):
