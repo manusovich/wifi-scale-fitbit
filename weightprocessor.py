@@ -83,18 +83,18 @@ class WeightProcessor:
         return diff_date < self.configuration.max_pause_for_morning_checks_days() \
                and diff_w > self.configuration.max_morning_weight_diff()
 
-    def get_user_by_weight(self, data):
+    def get_user_by_weight(self, w):
         diff_to_define_user = self.configuration.max_weight_diff_to_define_user()
 
         for user in self.users_provider.all():
             map_weight = self.users_provider.weight(user)
-            if map_weight - diff_to_define_user <= data.w <= map_weight + diff_to_define_user:
+            if map_weight - diff_to_define_user <= w <= map_weight + diff_to_define_user:
                 return user
 
         return None
 
     def process(self, data):
-        user = self.get_user_by_weight(data)
+        user = self.get_user_by_weight(data.w)
         morning_flow = True
 
         if user is not None:

@@ -166,7 +166,8 @@ class FitbitConnector:
 
 
 class EventProcessor:
-    def __init__(self):
+    def __init__(self, weight_processor):
+        self.weight_processor = weight_processor
         self.measured = False
         self.done = False
         self.events = []
@@ -186,7 +187,9 @@ class EventProcessor:
         if event.totalWeight > 10:
             tnow = int(round(time_.time() * 1000))
             if (tnow - self.last_render) > 500:
-                render(str(self.weight + 2), WHITE, "")
+                corrected_weight = self.weight + 2
+                render(str(corrected_weight), WHITE,
+                       get_user_text_by_weight(corrected_weight, self.weight_processor))
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
@@ -441,19 +444,6 @@ def main():
     time.sleep(3)
     GPIO.cleanup()
 
-    events_processor = EventProcessor()
-    board = Wiiboard(events_processor)
-
-    if len(sys.argv) == 1:
-        logging.debug("Discovering board...")
-        address = board.discover()
-    else:
-        address = sys.argv[1]
-
-    logging.debug("Trying to connect...")
-    board.connect(address)  # The wii board must be in sync mode at this time
-    board.set_light(False)
-
     data_provider = DataProvider()
 
     WeightProcessor.db_path = DB_PATH
@@ -468,6 +458,20 @@ def main():
                                        user_provider,
                                        FitbitConnector(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, user_provider))
 
+
+    events_processor = EventProcessor(weight_processor)
+    board = Wiiboard(events_processor)
+
+    if len(sys.argv) == 1:
+        logging.debug("Discovering board...")
+        address = board.discover()
+    else:
+        address = sys.argv[1]
+
+    logging.debug("Trying to connect...")
+    board.connect(address)  # The wii board must be in sync mode at this time
+    board.set_light(False)
+
     while 1 == 1:
         events_processor.reset()
         board.receive()
@@ -479,7 +483,7 @@ def main():
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        render(str(weight), GREEN, str(weight_processor.get_user_by_weight(weight_record)))
+        render(str(weight), GREEN, get_user_text_by_weight(weight, weight_processor))
 
         weight_processor.process(weight_record)
 
@@ -491,6 +495,14 @@ def main():
         pygame.display.update()
 
         logging.debug('Ready for next job')
+
+
+def get_user_text_by_weight(weight, weight_processor):
+    user = weight_processor.get_user_by_weight(weight)
+    user_txt = str(user)
+    if user is None:
+        user_txt = ""
+    return user_txt
 
 
 if __name__ == "__main__":
