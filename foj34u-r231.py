@@ -119,13 +119,16 @@ class Display:
         mn = 1000
         mx = 0
         if all_records:
+            count = sum(1 for r in all_records)
+            self.display.blit(self.font_graph.render(str(count), 1, WHITE), (10, 145))
+
             for r in all_records:
                 if r.w <= mn:
                     mn = r.w
                 if r.w >= mx:
                     mx = r.w
-        self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 130))
-        self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 230))
+        self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 125))
+        self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 225))
         pygame.display.update()
 
     def clear(self):
