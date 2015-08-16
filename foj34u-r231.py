@@ -212,8 +212,8 @@ class EventProcessor:
             tnow = int(round(time_.time() * 1000))
             if (tnow - self.last_render) > 500:
                 corrected_weight = self.weight + 2
-                display.render(str(corrected_weight), WHITE,
-                               get_user_text_by_weight(corrected_weight, self.weight_processor))
+                user = self.weight_processor.get_user_by_weight(corrected_weight)
+                display.render(str(corrected_weight), WHITE, safe_text(user))
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
@@ -506,8 +506,9 @@ def main():
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        display.render(str(weight), GREEN, get_user_text_by_weight(weight, weight_processor))
-        display.render_graph(data_provider.all(weight_processor.get_user_by_weight(weight)))
+        user = weight_processor.get_user_by_weight(weight)
+        display.render(str(weight), GREEN, safe_text(user))
+        display.render_graph(data_provider.all(user))
 
         weight_processor.process(weight_record)
 
@@ -520,12 +521,11 @@ def main():
         logging.debug('Ready for next job')
 
 
-def get_user_text_by_weight(weight, weight_processor):
-    user = weight_processor.get_user_by_weight(weight)
-    user_txt = str(user)
-    if user is None:
-        user_txt = ""
-    return user_txt
+def safe_text(value):
+    result = str(value)
+    if value is None:
+        result = ""
+    return result
 
 
 if __name__ == "__main__":
