@@ -477,7 +477,7 @@ def main():
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        render(str(weight), GREEN, "U_" + weight_processor.get_user_by_weight(weight_record))
+        render(str(weight), GREEN, "u_"+str(weight_processor.get_user_by_weight(weight_record)))
 
         weight_processor.process(weight_record)
 
