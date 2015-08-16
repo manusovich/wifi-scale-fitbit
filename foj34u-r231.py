@@ -7,11 +7,12 @@ import collections
 import pygame, sys, os
 import bluetooth
 import RPi.GPIO as GPIO
+import fitbit as fitbit
 
 from datetime import datetime
 from pygame.locals import *
-import fitbit as fitbit
-from weightprocessor import WeightProcessor, WeightRecord, WeightProcessorConfiguration
+from weightprocessor import WeightProcessor, WeightProcessorConfiguration
+from dataprovider import DataProvider, WeightRecord
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -160,6 +161,7 @@ class FitbitConnector:
             # making conversion to pounds
             fitbit_data = {'weight': weight * 2.2046, 'date': datetime.today().strftime("%Y-%m-%d")}
             authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
+
 
 
 class EventProcessor:
@@ -451,6 +453,8 @@ def main():
     board.connect(address)  # The wii board must be in sync mode at this time
     board.set_light(False)
 
+    data_provider = DataProvider()
+
     WeightProcessor.db_path = DB_PATH
     configuration = WeightProcessorConfiguration(MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS,
                                                  MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS,
@@ -458,7 +462,8 @@ def main():
                                                  MORNING_HOURS)
 
     user_provider = UserProvider(USERS)
-    weight_processor = WeightProcessor(configuration,
+    weight_processor = WeightProcessor(data_provider,
+                                       configuration,
                                        user_provider,
                                        FitbitConnector(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, user_provider))
 

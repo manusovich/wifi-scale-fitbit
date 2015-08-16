@@ -1,7 +1,6 @@
-from datetime import date, datetime
 import logging
 
-from blitzdb import FileBackend, Document
+from datetime import date, datetime
 
 
 def get_first_func(iterable, default=None):
@@ -13,10 +12,6 @@ def get_first_func(iterable, default=None):
 
 def diff_dates_func(date1, date2):
     return abs(date2 - date1).days
-
-
-class WeightRecord(Document):
-    pass
 
 
 class WeightProcessorConfiguration:
@@ -41,10 +36,8 @@ class WeightProcessorConfiguration:
 
 
 class WeightProcessor:
-    db_path = "./db"
-
-    def __init__(self, configuration, users_provider, fitbit=None):
-        self.db = FileBackend(self.db_path)
+    def __init__(self, data, configuration, users_provider, fitbit=None):
+        self.data = data
         self.configuration = configuration
         self.users_provider = users_provider
         self.fitbit = fitbit
@@ -53,8 +46,7 @@ class WeightProcessor:
     # update user's weights in USER structure
     def update_users_map(self):
         for user in self.users_provider.all():
-            last_user_record = get_first_func(
-                self.db.filter(WeightRecord, {'user': user, 'last': True}))
+            last_user_record = self.data.last(user)
             if last_user_record is not None:
                 self.users_provider.update_weight(user, last_user_record.w)
 
@@ -63,11 +55,11 @@ class WeightProcessor:
 
         if last_morning is not None:
             last_morning.last = False
-            last_morning.save(self.db)
+            self.data.save(last_morning)
 
         today_morning.last = True
         today_morning.morning = True
-        today_morning.save(self.db)
+        self.data.save(today_morning)
 
         if self.fitbit is not None:
             self.fitbit.log_weight(today_morning.user, today_morning.w)
@@ -77,7 +69,7 @@ class WeightProcessor:
 
         data.morning = False
         data.last = False
-        data.save(self.db)
+        self.data.save(data)
 
     def check_for_morning_value(self, data, last_morning):
         d1 = date(data.year, data.month, data.day)
@@ -122,11 +114,8 @@ class WeightProcessor:
             morning_flow = False
 
         if morning_flow:
-            today_morning = get_first_func(self.db.filter(WeightRecord, {
-                'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
-
-            last_morning = get_first_func(self.db.filter(WeightRecord, {
-                'last': True, 'morning': True, 'user': data.user}))
+            today_morning = self.data.today_morning(data)
+            last_morning = self.data.last_morning(data)
 
             if today_morning is None and last_morning is None:
                 # if we don't have any records for this day and none for previous, just record this value as
@@ -142,7 +131,7 @@ class WeightProcessor:
                         "Weight diff is too significant to be consider as morning weight. "
                         "Will be recorded as regular")
                     data.morning = False
-                    data.save(self.db)
+                    self.data.save(data)
                 else:
                     logging.info("Saving as morning weight for today")
                     self.process_new_morning_record(data, last_morning)
@@ -156,4 +145,4 @@ class WeightProcessor:
         else:
             self.process_new_regular_record(data)
 
-        self.db.commit()
+        self.data.commit()
