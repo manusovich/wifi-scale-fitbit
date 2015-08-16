@@ -88,6 +88,7 @@ BLUE = (0, 0, 255)
 WEIGHT_FONT_PATH = HOME + "/OpenSans-Bold.ttf"
 WEIGHT_FONT_SIZE = 100
 USER_FONT_SIZE = 30
+GRAPH_FONT_SIZE = 10
 
 LOG_FILE = HOME + "/scale.log"
 
@@ -105,12 +106,26 @@ class Display:
         pygame.font.init()
         self.font = pygame.font.Font(WEIGHT_FONT_PATH, WEIGHT_FONT_SIZE)
         self.font_user = pygame.font.Font(WEIGHT_FONT_PATH, USER_FONT_SIZE)
+        self.font_graph = pygame.font.Font(WEIGHT_FONT_PATH, GRAPH_FONT_SIZE)
         self.clear()
 
     def render(self, weight_text, weight_color, user_text):
         self.display.fill(BLACK)
         self.display.blit(self.font_user.render(user_text, 1, WHITE), (60, 10))
         self.display.blit(self.font.render(weight_text, 1, weight_color), (60, 30))
+        pygame.display.update()
+
+    def render_graph(self, all_records):
+        mn = 1000
+        mx = 0
+        if all_records:
+            for r in all_records:
+                if r.w <= mn:
+                    mn = r.w
+                if r.w >= mx:
+                    mx = r.w
+        self.display.blit(self.font_graph.render(str(max), 1, WHITE), (10, 130))
+        self.display.blit(self.font_graph.render(str(min), 1, WHITE), (10, 230))
         pygame.display.update()
 
     def clear(self):
@@ -452,19 +467,6 @@ def main():
 
     data_provider = DataProvider()
 
-    mn = 1000
-    mx = 0
-    all_records = data_provider.all("Alex")
-    if all_records:
-        for r in all_records:
-            if r.w <= mn:
-                mn = r.w
-            if r.w >= mx:
-                mx = r.w
-    logging.debug("Min "+str(mn))
-    logging.debug("Max "+str(mx))
-
-
     WeightProcessor.db_path = DB_PATH
     configuration = WeightProcessorConfiguration(MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS,
                                                  MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS,
@@ -502,6 +504,7 @@ def main():
                                       'w': weight})
 
         display.render(str(weight), GREEN, get_user_text_by_weight(weight, weight_processor))
+        display.render_graph(data_provider.all(weight_processor.get_user_by_weight(weight)))
 
         weight_processor.process(weight_record)
 
