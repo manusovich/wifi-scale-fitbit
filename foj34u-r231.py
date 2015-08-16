@@ -105,14 +105,10 @@ logging.basicConfig(filename=LOG_FILE,
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.DEBUG)
 
-user_text = ""
-user_color = WHITE
-weight_text = ""
-weight_color = BLACK
 
-def render():
+def render(weight_text, weight_color, user_text):
     display.fill(BLACK)
-    display.blit(font.render(user_text, 1, user_color), (60, 0))
+    display.blit(font.render(user_text, 1, WHITE), (60, 0))
     display.blit(font.render(weight_text, 1, weight_color), (60, 30))
     pygame.display.update()
 
@@ -132,15 +128,15 @@ class UserProvider:
 
     def fitbit_user_id(self, name):
         try:
-              return USERS[name]['fitbit_user']
+            return USERS[name]['fitbit_user']
         except:
-              return None
+            return None
 
     def fitbit_user_secret(self, name):
         try:
-              return USERS[name]['fitbit_secret']
+            return USERS[name]['fitbit_secret']
         except:
-              return None
+            return None
 
     def update_weight(self, name, weight):
         USERS[name]['weight'] = weight
@@ -167,7 +163,6 @@ class FitbitConnector:
             authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
 
 
-
 class EventProcessor:
     def __init__(self):
         self.measured = False
@@ -189,9 +184,7 @@ class EventProcessor:
         if event.totalWeight > 10:
             tnow = int(round(time_.time() * 1000))
             if (tnow - self.last_render) > 500:
-                weight_text = str(self.weight + 2)
-                weight_color = WHITE
-                render()
+                render(str(self.weight + 2), WHITE, "")
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
@@ -479,16 +472,12 @@ def main():
 
         weight = events_processor.weight + 2
 
-
         weight_record = WeightRecord({'year': datetime.today().year,
                                       'month': datetime.today().month,
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        weight_text = str(weight)
-        weight_color = GREEN
-        user_text = weight_processor.get_user_by_weight(weight_record)
-        render()
+        render(str(weight), GREEN, weight_processor.get_user_by_weight(weight_record))
 
         weight_processor.process(weight_record)
 
