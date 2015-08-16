@@ -21,6 +21,9 @@ class DataProvider:
     def last(self, user):
         get_first_func(self.db.filter(WeightRecord, {'user': user, 'last': True}))
 
+    def all(self, user):
+        self.db.filter(WeightRecord, {'user': user})
+
     def last_morning(self, data):
         get_first_func(self.db.filter(WeightRecord, {
             'last': True, 'morning': True, 'user': data.user}))

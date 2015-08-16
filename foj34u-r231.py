@@ -93,26 +93,32 @@ LOG_FILE = HOME + "/scale.log"
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-display.fill(BLACK)
-
-pygame.font.init()
-font = pygame.font.Font(WEIGHT_FONT_PATH, WEIGHT_FONT_SIZE)
-font_user = pygame.font.Font(WEIGHT_FONT_PATH, USER_FONT_SIZE)
-
-pygame.display.update()
-
 logging.basicConfig(filename=LOG_FILE,
                     format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.DEBUG)
 
 
-def render(weight_text, weight_color, user_text):
-    display.fill(BLACK)
-    display.blit(font_user.render(user_text, 1, WHITE), (60, 10))
-    display.blit(font.render(weight_text, 1, weight_color), (60, 30))
-    pygame.display.update()
+class Display:
+    def __init__(self):
+        self.display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+        pygame.font.init()
+        self.font = pygame.font.Font(WEIGHT_FONT_PATH, WEIGHT_FONT_SIZE)
+        self.font_user = pygame.font.Font(WEIGHT_FONT_PATH, USER_FONT_SIZE)
+        self.clear()
+
+    def render(self, weight_text, weight_color, user_text):
+        self.display.fill(BLACK)
+        self.display.blit(self.font_user.render(user_text, 1, WHITE), (60, 10))
+        self.display.blit(self.font.render(weight_text, 1, weight_color), (60, 30))
+        pygame.display.update()
+
+    def clear(self):
+        self.display.fill(BLACK)
+        pygame.display.update()
+
+
+display = Display()
 
 
 class UserProvider:
@@ -188,8 +194,8 @@ class EventProcessor:
             tnow = int(round(time_.time() * 1000))
             if (tnow - self.last_render) > 500:
                 corrected_weight = self.weight + 2
-                render(str(corrected_weight), WHITE,
-                       get_user_text_by_weight(corrected_weight, self.weight_processor))
+                display.render(str(corrected_weight), WHITE,
+                               get_user_text_by_weight(corrected_weight, self.weight_processor))
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
@@ -446,6 +452,19 @@ def main():
 
     data_provider = DataProvider()
 
+    mn = 1000
+    mx = 0
+    all_records = data_provider.all("Alex")
+    if all_records:
+        for r in all_records:
+            if r.w <= mn:
+                mn = r.w
+            if r.w >= mx:
+                mx = r.w
+    logging.debug("Min "+str(mn))
+    logging.debug("Max "+str(mx))
+
+
     WeightProcessor.db_path = DB_PATH
     configuration = WeightProcessorConfiguration(MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS,
                                                  MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS,
@@ -457,7 +476,6 @@ def main():
                                        configuration,
                                        user_provider,
                                        FitbitConnector(FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, user_provider))
-
 
     events_processor = EventProcessor(weight_processor)
     board = Wiiboard(events_processor)
@@ -483,7 +501,7 @@ def main():
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        render(str(weight), GREEN, get_user_text_by_weight(weight, weight_processor))
+        display.render(str(weight), GREEN, get_user_text_by_weight(weight, weight_processor))
 
         weight_processor.process(weight_record)
 
@@ -491,8 +509,7 @@ def main():
 
         board.set_light(False)
 
-        display.fill(BLACK)
-        pygame.display.update()
+        display.clear()
 
         logging.debug('Ready for next job')
 
