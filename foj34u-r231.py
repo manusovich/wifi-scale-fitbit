@@ -108,7 +108,7 @@ logging.basicConfig(filename=LOG_FILE,
 
 def render(weight_text, weight_color, user_text):
     display.fill(BLACK)
-    display.blit(font.render(user_text, 1, WHITE), (60, 0))
+    display.blit(font.render(user_text, 1, WHITE), (60, 20))
     display.blit(font.render(weight_text, 1, weight_color), (60, 30))
     pygame.display.update()
 
@@ -477,7 +477,7 @@ def main():
                                       'day': datetime.today().day,
                                       'w': weight})
 
-        render(str(weight), GREEN, weight_processor.get_user_by_weight(weight_record))
+        render(str(weight), GREEN, "U_" + weight_processor.get_user_by_weight(weight_record))
 
         weight_processor.process(weight_record)
 
