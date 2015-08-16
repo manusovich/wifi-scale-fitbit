@@ -229,6 +229,7 @@ class EventProcessor:
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
+                display.clear()
                 self.board.set_light(True)
                 logging.debug("Starting measurement.")
                 self.measured = True
@@ -522,13 +523,7 @@ def main():
         display.render_graph(data_provider.all_mornings(user))
 
         weight_processor.process(weight_record)
-
-        time.sleep(5)
-
         board.set_light(False)
-
-        display.clear()
-
         logging.debug('Ready for next job')
 
 
