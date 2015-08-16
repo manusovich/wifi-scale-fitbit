@@ -84,7 +84,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 SILVER = (180, 180, 180)
-GRAY = (80, 80, 80)
+GRAY = (40, 40, 40)
 
 WEIGHT_FONT_PATH = HOME + "/OpenSans-Bold.ttf"
 WEIGHT_FONT_SIZE = 100
@@ -131,9 +131,10 @@ class Display:
             self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 145))
             self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 220))
 
-            x = 20
+            x = 40
             x0 = None
             y0 = None
+            pygame.draw.line(self.display, GRAY, (x, 145), (x, 240))
             for r in all_mornings:
                 x += 280 / count
                 y = 145 + (240 - 145) / (mx - mn) * (r.w - mn)
