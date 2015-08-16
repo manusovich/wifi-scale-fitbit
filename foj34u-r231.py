@@ -105,11 +105,15 @@ logging.basicConfig(filename=LOG_FILE,
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.DEBUG)
 
+user_text = ""
+user_color = WHITE
+weight_text = ""
+weight_color = BLACK
 
-def render_weight(weight, color):
+def render():
     display.fill(BLACK)
-    score_text = font.render(weight, 1, color)
-    display.blit(score_text, (60, 30))
+    display.blit(font.render(user_text, 1, user_color), (60, 0))
+    display.blit(font.render(weight_text, 1, weight_color), (60, 30))
     pygame.display.update()
 
 
@@ -472,12 +476,17 @@ def main():
         board.receive()
 
         weight = events_processor.weight + 2
-        render_weight(str(weight), GREEN)
+
 
         weight_record = WeightRecord({'year': datetime.today().year,
                                       'month': datetime.today().month,
                                       'day': datetime.today().day,
                                       'w': weight})
+
+        weight_text = str(weight)
+        weight_color = GREEN
+        user_text = weight_processor.get_user_by_weight(weight_record)
+        render()
 
         weight_processor.process(weight_record)
 
