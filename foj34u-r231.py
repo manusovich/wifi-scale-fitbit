@@ -115,13 +115,13 @@ class Display:
         self.display.blit(self.font.render(weight_text, 1, weight_color), (60, 30))
         pygame.display.update()
 
-    def render_graph(self, all_records):
+    def render_graph(self, all_mornings):
         mn = 1000
         mx = 0
 
-        if all_records:
-            count = sum(1 for r in all_records)
-            for r in all_records:
+        if all_mornings:
+            count = sum(1 for r in all_mornings)
+            for r in all_mornings:
                 if r.w <= mn:
                     mn = r.w
                 if r.w >= mx:
@@ -133,7 +133,7 @@ class Display:
             x = 0
             x0 = None
             y0 = None
-            for r in all_records:
+            for r in all_mornings:
                 x += 320 / count
                 y = 145 + (225 - 145) / (mx - mn) * (r.w - mn)
                 if y0 is not None:
@@ -519,7 +519,7 @@ def main():
 
         user = weight_processor.get_user_by_weight(weight)
         display.render(str(weight), GREEN, safe_text(user))
-        display.render_graph(data_provider.all(user))
+        display.render_graph(data_provider.all_mornings(user))
 
         weight_processor.process(weight_record)
 
