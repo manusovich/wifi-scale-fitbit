@@ -13,16 +13,14 @@ class WeightRecord(Document):
 
 
 class DataProvider:
-    db_path = "./db"
-
-    def __init__(self):
-        self.db = FileBackend(self.db_path)
+    def __init__(self, db_path):
+        self.db = FileBackend(db_path)
 
     def last(self, user):
         get_first_func(self.db.filter(WeightRecord, {'user': user, 'last': True}))
 
     def all(self, user):
-        self.db.filter(WeightRecord, {'user': user})
+        return self.db.filter(WeightRecord, {'user': user})
 
     def last_morning(self, data):
         get_first_func(self.db.filter(WeightRecord, {

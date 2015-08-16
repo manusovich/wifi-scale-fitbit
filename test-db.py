@@ -3,9 +3,7 @@
 from pygame.locals import *
 from dataprovider import WeightRecord, DataProvider
 
-DataProvider.db_path = "/home/pi/weight_db"
-
-data = DataProvider()
+data = DataProvider("/home/pi/weight_db")
 all_records = data.all("Alex")
 print all_records
 
