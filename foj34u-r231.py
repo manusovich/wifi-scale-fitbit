@@ -84,7 +84,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 SILVER = (180, 180, 180)
-GRAY = (40, 40, 40)
+GRAY = (20, 20, 20)
 
 WEIGHT_FONT_PATH = HOME + "/OpenSans-Bold.ttf"
 WEIGHT_FONT_SIZE = 100
