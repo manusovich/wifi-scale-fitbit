@@ -124,8 +124,8 @@ class Display:
                     mn = r.w
                 if r.w >= mx:
                     mx = r.w
-        self.display.blit(self.font_graph.render(str(max), 1, WHITE), (10, 130))
-        self.display.blit(self.font_graph.render(str(min), 1, WHITE), (10, 230))
+        self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 130))
+        self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 230))
         pygame.display.update()
 
     def clear(self):
