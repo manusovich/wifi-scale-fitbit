@@ -35,7 +35,7 @@ FITBIT_CLIENT_SECRET = os.environ.get('FITBIT_CLIENT_SECRET')
 # initial possible diff in weights for users to define them based on USERS map
 # for example if you have here 2 and 77 for alex in the map, we will consider that
 # user is alex if we will have 77 - 2 < value < 77 + 2
-USERS_MAX_W_DIFF = 2
+USERS_MAX_W_DIFF = 3
 
 # after this time we won't anymore check correlation with last morning weight
 MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS = 5
