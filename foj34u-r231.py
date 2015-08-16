@@ -135,7 +135,7 @@ class Display:
             y0 = None
             for r in all_records:
                 x += 320 / count
-                y = 145 + (225 - 145) / (mx - mn) * r.w - mn
+                y = 145 + (225 - 145) / (mx - mn) * (r.w - mn)
                 if y0 is not None:
                     pygame.draw.line(self.display, BLUE, (x0, y0), (x, y))
                 x0 = x
