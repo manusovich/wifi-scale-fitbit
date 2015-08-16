@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 from pygame.locals import *
-from dataprovider import DataProvider
+from dataprovider import WeightRecord, DataProvider
 
 data = DataProvider()
-all_records = data.all('Alex')
+all_records = data.get_db().filter(WeightRecord, {'user': 'Alex'})
 print all_records
 
 count = sum(1 for r in all_records)
