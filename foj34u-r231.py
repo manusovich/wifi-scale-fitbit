@@ -88,7 +88,7 @@ BLUE = (0, 0, 255)
 WEIGHT_FONT_PATH = HOME + "/OpenSans-Bold.ttf"
 WEIGHT_FONT_SIZE = 100
 USER_FONT_SIZE = 30
-GRAPH_FONT_SIZE = 10
+GRAPH_FONT_SIZE = 16
 
 LOG_FILE = HOME + "/scale.log"
 
@@ -118,19 +118,30 @@ class Display:
     def render_graph(self, all_records):
         mn = 1000
         mx = 0
+
         if all_records:
             count = sum(1 for r in all_records)
-            self.display.blit(self.font_graph.render(str(count), 1, WHITE), (10, 145))
-
             for r in all_records:
                 if r.w <= mn:
                     mn = r.w
                 if r.w >= mx:
                     mx = r.w
 
-        self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 125))
-        self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 225))
-        pygame.display.update()
+            self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 145))
+            self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 225))
+
+            x = 0
+            x0 = None
+            y0 = None
+            for r in all_records:
+                x += 320 / count
+                y = 145 + (225 - 145) / (mx - mn) * r.w - mn
+                if y0 is not None:
+                    pygame.draw.line(self.display, BLUE, (x0, y0), (x, y))
+                x0 = x
+                y0 = y
+
+            pygame.display.update()
 
     def clear(self):
         self.display.fill(BLACK)
