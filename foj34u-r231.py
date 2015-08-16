@@ -85,6 +85,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 SILVER = (180, 180, 180)
 GRAY = (20, 20, 20)
+YELLOW = (255, 255, 0)
 
 WEIGHT_FONT_PATH = HOME + "/OpenSans-Bold.ttf"
 WEIGHT_FONT_SIZE = 100
@@ -149,7 +150,7 @@ class Display:
                 x0 = x
                 y0 = y
 
-            self.display.blit(self.font_graph.render(str(w), 1, GREEN), (10, y0 - 8))
+            self.display.blit(self.font_graph.render(str(w), 1, YELLOW), (10, y0 - 8))
             pygame.display.update()
 
     def clear(self):
@@ -234,7 +235,7 @@ class EventProcessor:
             if (tnow - self.last_render) > 500:
                 corrected_weight = self.weight + 2
                 user = self.weight_processor.get_user_by_weight(corrected_weight)
-                display.render(str(corrected_weight), WHITE, safe_text(user))
+                display.render(str(corrected_weight), SILVER, safe_text(user))
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
@@ -528,7 +529,7 @@ def main():
                                       'w': weight})
 
         user = weight_processor.get_user_by_weight(weight)
-        display.render(str(weight), GREEN, safe_text(user))
+        display.render(str(weight), WHITE, safe_text(user))
         display.render_graph(data_provider.all_mornings(user))
 
         weight_processor.process(weight_record)
