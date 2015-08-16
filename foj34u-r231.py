@@ -469,8 +469,7 @@ def main():
     time.sleep(3)
     GPIO.cleanup()
 
-    DataProvider.db_path = DB_PATH
-    data_provider = DataProvider()
+    data_provider = DataProvider(DB_PATH)
 
     configuration = WeightProcessorConfiguration(MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS,
                                                  MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS,
