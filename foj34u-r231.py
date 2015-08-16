@@ -189,7 +189,9 @@ class EventProcessor:
         if event.totalWeight > 10:
             tnow = int(round(time_.time() * 1000))
             if (tnow - self.last_render) > 500:
-                render_weight(str(self.weight + 2), WHITE)
+                weight_text = str(self.weight + 2)
+                weight_color = WHITE
+                render()
                 self.last_render = int(round(time_.time() * 1000))
             self.events.append(event.totalWeight)
             if not self.measured:
