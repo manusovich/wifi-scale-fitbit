@@ -135,14 +135,15 @@ class Display:
             self.display.blit(self.font_graph.render(str(mx), 1, WHITE), (10, 145))
             self.display.blit(self.font_graph.render(str(mn), 1, WHITE), (10, 220))
 
+            x_step = 280 / count
             x = 40
             x0 = None
             y0 = None
             w = 0
-            pygame.draw.line(self.display, GRAY, (x, 145), (x, 240))
+            pygame.draw.line(self.display, GRAY, (x + x_step, 145), (x + x_step, 240))
             for r in all_mornings:
                 w = r.w
-                x += 280 / count
+                x += x_step
                 y = 145 + (240 - 145) / (mx - mn) * (r.w - mn)
                 if y0 is not None:
                     pygame.draw.line(self.display, GRAY, (x, 145), (x, 240))
