@@ -531,9 +531,9 @@ def main():
 
         user = weight_processor.get_user_by_weight(weight)
         display.render(str(weight), WHITE, safe_text(user))
+        weight_processor.process(weight_record)
         display.render_graph(data_provider.all_mornings(user))
 
-        weight_processor.process(weight_record)
         board.set_light(False)
         logging.debug('Ready for next job')
 
