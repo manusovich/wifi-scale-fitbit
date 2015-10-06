@@ -209,7 +209,12 @@ class FitbitConnector:
                                          resource_owner_secret=fitbit_user_secret)
             # making conversion to pounds
             fitbit_data = {'weight': weight * 2.2046, 'date': datetime.today().strftime("%Y-%m-%d")}
-            authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
+
+            try:
+                authd_client._COLLECTION_RESOURCE('body', data=fitbit_data)
+            except:
+                logging.error("Problem with FitBit request for update body weight")
+
 
 
 class EventProcessor:
