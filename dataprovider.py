@@ -34,8 +34,7 @@ class DataProvider:
         logging.debug("LMDB2 '{}'".format(data.user))
 
         data1 = get_first_func(db_filter2)
-        logging.debug("LMDB3 '{}'".format({
-            'year': data1.year, 'month': data1.month, 'day': data1.day, 'user': data1.user, 'morning': data1.morning}))
+        logging.debug("LMDB3 '{}'".format(data1))
 
         return data1
 
