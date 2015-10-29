@@ -51,7 +51,7 @@ class WeightProcessor:
                 self.users_provider.update_weight(user, last_user_record.w)
 
     def timestamp_ms(self):
-        return int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds() * 1000)
+        return int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000)
 
     def process_new_morning_record(self, today_morning, last_morning=None):
         logging.debug("Saving as morning value")
