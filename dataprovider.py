@@ -33,13 +33,18 @@ class DataProvider:
         logging.debug("LMDB1 '{}'".format(db_filter2))
         logging.debug("LMDB2 '{}'".format(data.user))
 
-        get_first_func(db_filter2)
+        data1 = get_first_func(db_filter2)
+        logging.debug("LMDB3 '{}'".format({
+            'year': data1.year, 'month': data1.month, 'day': data1.day, 'user': data1.user, 'morning': data1.morning}))
+
+        return data1
+
 
     def today_morning(self, data):
         logging.debug("TMDB {}".format({
             'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
 
-        get_first_func(self.db.filter(WeightRecord, {
+        return get_first_func(self.db.filter(WeightRecord, {
             'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
 
     def save(self, record):
