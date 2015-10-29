@@ -144,7 +144,7 @@ class Display:
             for r in all_mornings:
                 w = r.w
                 x += x_step
-                y = 145 + (240 - 145) / (mx - mn) * (r.w - mn)
+                y = 240 - (240 - 145) / (mx - mn) * (r.w - mn)
                 if y0 is not None:
                     pygame.draw.line(self.display, GRAY, (x, 145), (x, 240))
                     pygame.draw.line(self.display, SILVER, (x0, y0), (x, y))

@@ -22,13 +22,13 @@ class DataProvider:
 
     def all_mornings(self, user):
         db_filter = self.db.filter(WeightRecord, {'user': user, 'morning': True})
-        if db_filter:
-            for i in db_filter:
-                logging.debug("T0 {}".format(i.time))
+        #if db_filter:
+        #    for i in db_filter:
+        #        logging.debug("T0 {}".format(i.time))
         sor = sorted(db_filter, key=lambda x: x.time, reverse=False)
-        if sor:
-            for i in sor:
-                logging.debug("T1 {}".format(i.time))
+        #if sor:
+        #    for i in sor:
+        #       logging.debug("T1 {}".format(i.time))
         return sor
 
     def last_morning(self, data):
