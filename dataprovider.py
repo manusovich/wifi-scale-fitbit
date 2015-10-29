@@ -1,5 +1,4 @@
 from blitzdb import FileBackend, Document
-import logging
 
 
 def get_first_func(iterable, default=None):
@@ -22,7 +21,7 @@ class DataProvider:
 
     def all_mornings(self, user):
         db_filter = self.db.filter(WeightRecord, {'user': user, 'morning': True})
-        return db_filter
+        return sorted(db_filter, key=lambda x: x.time, reverse=True)
 
     def last_morning(self, data):
         get_first_func(self.db.filter(WeightRecord, {

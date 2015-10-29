@@ -25,7 +25,7 @@ HOME = "/home/pi"
 USERS = {"Alex": {'weight': 77,
                   'fitbit_user': os.environ.get('FITBIT_ALEX_ID'),
                   'fitbit_secret': os.environ.get('FITBIT_ALEX_SECRET')},
-         "Olya": {'weight': 57},
+         "Olya": {'weight': 53},
          "Platon": {'weight': 16}}
 
 # Fitbit client information
@@ -35,7 +35,7 @@ FITBIT_CLIENT_SECRET = os.environ.get('FITBIT_CLIENT_SECRET')
 # initial possible diff in weights for users to define them based on USERS map
 # for example if you have here 2 and 77 for alex in the map, we will consider that
 # user is alex if we will have 77 - 2 < value < 77 + 2
-USERS_MAX_W_DIFF = 10
+USERS_MAX_W_DIFF = 5
 
 # after this time we won't anymore check correlation with last morning weight
 MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS = 30
@@ -45,7 +45,7 @@ MAX_PAUSE_BETWEEN_MORNING_CHECKS_IN_DAYS = 30
 MAX_WEIGHT_DIFF_BETWEEN_MORNING_CHECKS = 2
 
 # time limits for morning values (24 hours period). None if check should not be performed
-MORNING_HOURS = (5, 24)
+MORNING_HOURS = (5, 11)
 
 # path for database file
 DB_PATH = HOME + "/weight_db"
