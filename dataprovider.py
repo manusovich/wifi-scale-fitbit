@@ -1,5 +1,4 @@
 from blitzdb import FileBackend, Document
-import logging
 
 
 def get_first_func(iterable, default=None):
