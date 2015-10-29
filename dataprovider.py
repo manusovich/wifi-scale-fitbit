@@ -24,10 +24,16 @@ class DataProvider:
         return db_filter
 
     def last_morning(self, data):
-        logging.debug("LMDB '{}'".format(data.user))
+        db_filter2 = self.db.filter(WeightRecord, {'last': True, 'morning': True, 'user': data.user})
 
-        get_first_func(self.db.filter(WeightRecord, {
-            'last': True, 'morning': True, 'user': data.user}))
+        if db_filter2:
+            count = sum(1 for r in db_filter2)
+            logging.debug("LMDB 0 '{}'".format(count))
+
+        logging.debug("LMDB1 '{}'".format(db_filter2))
+        logging.debug("LMDB2 '{}'".format(data.user))
+
+        get_first_func(db_filter2)
 
     def today_morning(self, data):
         logging.debug("TMDB {}".format({
