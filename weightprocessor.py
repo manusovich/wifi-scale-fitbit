@@ -51,7 +51,7 @@ class WeightProcessor:
                 self.users_provider.update_weight(user, last_user_record.w)
 
     def process_new_morning_record(self, today_morning, last_morning = None):
-        logging.debug("1 Saving as morning value {}", last_morning)
+        logging.debug("1 Saving as morning value {}".format(last_morning))
 
         if last_morning is not None:
             last_morning.last = False
@@ -60,7 +60,7 @@ class WeightProcessor:
         today_morning.last = True
         today_morning.morning = True
 
-        logging.debug("2 Saving as morning value2 {}", today_morning)
+        logging.debug("2 Saving as morning value2 {}".format(today_morning))
         self.data.save(today_morning)
 
         logging.debug("3 Data commit")
@@ -121,7 +121,9 @@ class WeightProcessor:
         if morning_flow:
             logging.info("MF {}".format(data))
             today_morning = self.data.today_morning(data)
+            logging.info("MF1 {}".format(today_morning))
             last_morning = self.data.last_morning(data)
+            logging.info("MF2 {}".format(last_morning))
 
             if today_morning is None and last_morning is None:
                 # if we don't have any records for this day and none for previous, just record this value as
