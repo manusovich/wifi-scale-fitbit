@@ -25,7 +25,7 @@ class DataProvider:
         if db_filter:
             for i in db_filter:
                 logging.debug("T0 {}".format(i.time))
-        sor = sorted(db_filter, key=lambda x: x.time, reverse=True)
+        sor = sorted(db_filter, key=lambda x: x.time, reverse=False)
         if sor:
             for i in sor:
                 logging.debug("T1 {}".format(i.time))
