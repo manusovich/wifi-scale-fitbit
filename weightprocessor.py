@@ -1,5 +1,4 @@
 import logging
-import json
 
 from datetime import date, datetime
 
@@ -60,6 +59,7 @@ class WeightProcessor:
 
         today_morning.last = True
         today_morning.morning = True
+        logging.debug("Saving as morning value {}", today_morning)
         self.data.save(today_morning)
 
         if self.fitbit is not None:
@@ -115,7 +115,7 @@ class WeightProcessor:
             morning_flow = False
 
         if morning_flow:
-            logging.info("MF {}".format(json.dumps(data)))
+            logging.info("MF {}".format(data))
             today_morning = self.data.today_morning(data)
             last_morning = self.data.last_morning(data)
 
