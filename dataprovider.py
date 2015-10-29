@@ -1,5 +1,5 @@
 from blitzdb import FileBackend, Document
-
+import logging
 
 def get_first_func(iterable, default=None):
     if iterable:
@@ -24,10 +24,15 @@ class DataProvider:
         return db_filter
 
     def last_morning(self, data):
+        logging.debug("LMDB '{}'".format(data.user))
+
         get_first_func(self.db.filter(WeightRecord, {
             'last': True, 'morning': True, 'user': data.user}))
 
     def today_morning(self, data):
+        logging.debug("TMDB {}".format({
+            'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
+
         get_first_func(self.db.filter(WeightRecord, {
             'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
 
