@@ -50,7 +50,7 @@ class WeightProcessor:
             if last_user_record is not None:
                 self.users_provider.update_weight(user, last_user_record.w)
 
-    def process_new_morning_record(self, today_morning, last_morning=None):
+    def process_new_morning_record(self, today_morning, last_morning = None):
         logging.debug("Saving as morning value")
 
         if last_morning is not None:
@@ -59,7 +59,8 @@ class WeightProcessor:
 
         today_morning.last = True
         today_morning.morning = True
-        logging.debug("Saving as morning value {}", today_morning)
+
+        logging.debug("Saving as morning value2 {}", today_morning)
         self.data.save(today_morning)
 
         if self.fitbit is not None:
@@ -123,7 +124,7 @@ class WeightProcessor:
                 # if we don't have any records for this day and none for previous, just record this value as
                 # first morning
                 logging.info("Wow, your first value in db! Saving that")
-                self.process_new_morning_record(data)
+                self.process_new_morning_record(data, last_morning)
 
             elif today_morning is None and last_morning is not None:
                 # if we don't have morning record for today but we have for last_morning 5 days, we should check the diff
