@@ -114,7 +114,6 @@ class WeightProcessor:
             morning_flow = False
 
         if morning_flow:
-            logging.info("MF {}".format(data))
             today_morning = self.data.today_morning(data)
             last_morning = self.data.last_morning(data)
 

@@ -1,6 +1,7 @@
 from blitzdb import FileBackend, Document
 import logging
 
+
 def get_first_func(iterable, default=None):
     if iterable:
         for i in iterable:
@@ -28,7 +29,7 @@ class DataProvider:
             'last': True, 'morning': True, 'user': data.user}))
 
     def today_morning(self, data):
-        return get_first_func(self.db.filter(WeightRecord, {
+        get_first_func(self.db.filter(WeightRecord, {
             'year': data.year, 'month': data.month, 'day': data.day, 'user': data.user, 'morning': True}))
 
     def save(self, record):
