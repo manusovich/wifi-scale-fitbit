@@ -51,7 +51,7 @@ class WeightProcessor:
                 self.users_provider.update_weight(user, last_user_record.w)
 
     def process_new_morning_record(self, today_morning, last_morning = None):
-        logging.debug("Saving as morning value")
+        logging.debug("1 Saving as morning value {}", last_morning)
 
         if last_morning is not None:
             last_morning.last = False
@@ -60,8 +60,11 @@ class WeightProcessor:
         today_morning.last = True
         today_morning.morning = True
 
-        logging.debug("Saving as morning value2 {}", today_morning)
+        logging.debug("2 Saving as morning value2 {}", today_morning)
         self.data.save(today_morning)
+
+        logging.debug("3 Data commit")
+        self.data.commit()
 
         if self.fitbit is not None:
             self.fitbit.log_weight(today_morning.user, today_morning.w)
