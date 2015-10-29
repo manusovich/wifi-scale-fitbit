@@ -1,4 +1,5 @@
 import logging
+import json
 
 from datetime import date, datetime
 
@@ -114,6 +115,7 @@ class WeightProcessor:
             morning_flow = False
 
         if morning_flow:
+            logging.info("MF {}".format(json.dumps(data)))
             today_morning = self.data.today_morning(data)
             last_morning = self.data.last_morning(data)
 
